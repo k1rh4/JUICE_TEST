@@ -1,0 +1,14 @@
+services:
+  juice-shop:
+    image: bkimminich/juice-shop:latest
+    environment:
+      JUICE_DB_CHALLENGE_CHECKS: "${JUICE_DB_CHALLENGE_CHECKS:-false}"
+      JUICE_CHALLENGE_POLICY: "${JUICE_CHALLENGE_POLICY:-non-dos}"
+      NODE_OPTIONS: "--require=/opt/juicetest/challenge-policy.cjs --require=/opt/juicetest/db-challenge-checks.cjs"
+    volumes:
+      - ./runtime/db-challenge-checks.cjs:/opt/juicetest/db-challenge-checks.cjs:ro
+      - ./runtime/challenge-policy.cjs:/opt/juicetest/challenge-policy.cjs:ro
+      - ./runtime/non-dos-uploads.cjs:/opt/juicetest/non-dos-uploads.cjs:ro
+    ports:
+      - "${JUICE_HOST:-0.0.0.0}:${JUICE_PORT:-17882}:3000"
+    restart: unless-stopped
